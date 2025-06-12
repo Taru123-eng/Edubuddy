@@ -1,4 +1,3 @@
-
 import streamlit as st
 import google.generativeai as genai
 
@@ -14,6 +13,8 @@ st.markdown("""
         .main {background-color: #f4f6f8;}
         h1, h2, h3 {color: #333;}
         .stButton>button {background-color: #4CAF50; color: white;}
+        .stRadio>label {background-color: #9AC5F4; padding: 10px; border-radius: 5px;}
+        .stRadio input:checked+label {background-color: #068DA9; color: white;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -25,6 +26,8 @@ if "chapter_content" not in st.session_state:
     st.session_state.chapter_content = ""
 if "mcqs" not in st.session_state:
     st.session_state.mcqs = []
+if "subjective_questions" not in st.session_state:
+    st.session_state.subjective_questions = []
 
 # --- Chapter Summarizer ---
 with tabs[0]:
@@ -83,7 +86,7 @@ with tabs[1]:
 
         with st.form("test_form"):
             for i, mcq in enumerate(st.session_state.mcqs):
-                st.write(f"**Q{i+1}. {mcq['question']}**")
+                st.write(f"*Q{i+1}. {mcq['question']}*")
                 user_choice = st.radio(
                     f"Choose an option for Q{i+1}", 
                     options=mcq['options'], 
@@ -109,6 +112,16 @@ with tabs[1]:
                 remark = "📖 Needs improvement. Go through the chapter again."
 
             st.info(remark)
+
+            # Provide resource links
+            resources = [
+                "📘 [Khan Academy - Science Courses](https://www.khanacademy.org/science)",
+                "📚 [Coursera - Biology Courses](https://www.coursera.org/browse/health/biology)",
+                "🧪 [YouTube - CrashCourse Biology](https://www.youtube.com/playlist?list=PL8dPuuaLjXtM5ZlQXyXgQZ6WzvF6c5c3u)"
+            ]
+            st.markdown("### 📚 Recommended Resources:")
+            for resource in resources:
+                st.markdown(f"- {resource}")
 
 # --- Doubt Solver ---
 with tabs[2]:
