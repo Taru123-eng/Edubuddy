@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="EduBuddy AI",
     layout="wide",
     initial_sidebar_state="collapsed",
-    page_icon="🍐"
+    page_icon="🧠"
 )
 
 # Custom CSS for premium styling
