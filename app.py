@@ -1,9 +1,17 @@
 import streamlit as st
 import google.generativeai as genai
+import pandas as pd
+from datetime import datetime
 
 # Configure Gemini API
 genai.configure(api_key="AIzaSyBajGa89W5CJOGwLfYQUkSqw6B505KGRiA")  # Replace with your actual API key
 model = genai.GenerativeModel("gemini-1.5-flash")
+
+# Initialize session state and data storage
+if 'df_users' not in st.session_state:
+    st.session_state.df_users = pd.DataFrame(columns=['username', 'timestamp'])
+if 'current_tab' not in st.session_state:
+    st.session_state.current_tab = None
 
 # Page Configuration
 st.set_page_config(
@@ -64,109 +72,6 @@ st.markdown("""
             font-weight: 400;
         }
         
-        .cta-button {
-            display: flex;
-            justify-content: center;
-            margin: 40px 0 60px;
-        }
-        
-        /* Premium tabs */
-        .stTabs [data-baseweb="tab-list"] {
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .stTabs [data-baseweb="tab"] {
-            height: 50px;
-            padding: 0 30px;
-            border-radius: 12px !important;
-            background-color: transparent !important;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.3s ease !important;
-            border: 1px solid #e2e8f0 !important;
-            color: #64748b !important;
-        }
-        
-        .stTabs [aria-selected="true"] {
-            background-color: #4f46e5 !important;
-            color: white !important;
-            border-color: #4f46e5 !important;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-        }
-        
-        /* Content containers */
-        .content-container {
-            background-color: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            border: 1px solid #f1f5f9;
-        }
-        
-        /* Text areas */
-        .stTextArea>div>div>textarea {
-            border-radius: 12px;
-            padding: 16px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        /* Radio buttons */
-        .stRadio>div {
-            gap: 8px;
-        }
-        
-        .stRadio>div>label {
-            background-color: #f8fafc;
-            border-radius: 12px;
-            padding: 14px 20px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s ease;
-        }
-        
-        .stRadio>div>label:hover {
-            background-color: #f1f5f9;
-        }
-        
-        .stRadio input:checked+label {
-            background-color: #4f46e5 !important;
-            color: white !important;
-            border-color: #4f46e5 !important;
-        }
-        
-        /* Feedback styling */
-        .correct {
-            color: #10b981;
-            font-weight: 600;
-        }
-        
-        .incorrect {
-            color: #ef4444;
-            font-weight: 600;
-        }
-        
-        .warning {
-            color: #f59e0b;
-            font-weight: 600;
-        }
-        
-        /* Progress bar */
-        .stProgress>div>div>div>div {
-            background-color: #4f46e5 !important;
-        }
-        
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 80px;
-            padding: 30px 0;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            border-top: 1px solid #f1f5f9;
-        }
-        
         /* Feature cards */
         .feature-card {
             background-color: white;
@@ -176,11 +81,18 @@ st.markdown("""
             margin-bottom: 30px;
             border: 1px solid #f1f5f9;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border-color: #4f46e5;
+        }
+        
+        .feature-card.selected {
+            border: 2px solid #4f46e5;
+            background-color: #f8fafc;
         }
         
         .feature-icon {
@@ -200,72 +112,114 @@ st.markdown("""
             color: #64748b;
             line-height: 1.6;
         }
+        
+        /* Content containers */
+        .content-container {
+            background-color: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border: 1px solid #f1f5f9;
+        }
+        
+        /* Gradient footer */
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .footer a {
+            color: white !important;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Username input */
+        .username-input {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            z-index: 100;
+            border: 1px solid #e2e8f0;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# Premium Header Section
-st.markdown("""
-    <div class="header-container">
-        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
-        <div>
-            <h1 class="main-title">EduBuddy AI</h1>
-            <p class="subtitle">Your intelligent learning companion that adapts to your study style, powered by Gemini AI</p>
-        </div>
-        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
-    </div>
-""", unsafe_allow_html=True)
+# Function to handle tab selection
+def select_tab(tab_name):
+    st.session_state.current_tab = tab_name
 
-# Feature Cards
-col1, col2, col3 = st.columns(3)
-with col1:
+# Cover Page - Only shown when no tab is selected
+def show_cover_page():
     st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📖</div>
-            <h3 class="feature-title">Smart Summaries</h3>
-            <p class="feature-desc">Transform lengthy chapters into concise, digestible summaries with key concepts highlighted.</p>
+        <div class="header-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
+            <div>
+                <h1 class="main-title">EduBuddy AI</h1>
+                <p class="subtitle">Your intelligent learning companion that adapts to your study style</p>
+            </div>
+            <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
         </div>
     """, unsafe_allow_html=True)
 
-with col2:
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(f"""
+            <div class="feature-card" onclick="selectTab('summary')">
+                <div class="feature-icon">📖</div>
+                <h3 class="feature-title">Smart Summaries</h3>
+                <p class="feature-desc">Transform lengthy chapters into concise, digestible summaries with key concepts highlighted.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown(f"""
+            <div class="feature-card" onclick="selectTab('test')">
+                <div class="feature-icon">📝</div>
+                <h3 class="feature-title">Adaptive Testing</h3>
+                <p class="feature-desc">Personalized quizzes that identify knowledge gaps and reinforce learning.</p>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col3:
+        st.markdown(f"""
+            <div class="feature-card" onclick="selectTab('doubt')">
+                <div class="feature-icon">💡</div>
+                <h3 class="feature-title">Doubt Resolution</h3>
+                <p class="feature-desc">Instant explanations with analogies and examples for any concept you're stuck on.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # Add JavaScript for tab selection
     st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">📝</div>
-            <h3 class="feature-title">Adaptive Testing</h3>
-            <p class="feature-desc">Personalized quizzes that identify knowledge gaps and reinforce learning.</p>
-        </div>
+        <script>
+            function selectTab(tabName) {
+                window.parent.postMessage({
+                    type: 'streamlit:setComponentValue',
+                    value: tabName
+                }, '*');
+            }
+        </script>
     """, unsafe_allow_html=True)
 
-with col3:
-    st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">💡</div>
-            <h3 class="feature-title">Doubt Resolution</h3>
-            <p class="feature-desc">Instant explanations with analogies and examples for any concept you're stuck on.</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-# Main tabs with premium styling
-tabs = st.tabs(["   📖 Chapter Summarizer   ", "   📝 Take a Test   ", "   💭 Doubt Solver   "])
-
-# Session state to store chapter summary and test
-if "chapter_content" not in st.session_state:
-    st.session_state.chapter_content = ""
-if "summary" not in st.session_state:
-    st.session_state.summary = ""
-if "mcqs" not in st.session_state:
-    st.session_state.mcqs = []
-if "subjective_questions" not in st.session_state:
-    st.session_state.subjective_questions = []
-if "subjective_answers" not in st.session_state:
-    st.session_state.subjective_answers = []
-if "subjective_feedback" not in st.session_state:
-    st.session_state.subjective_feedback = []
-
-# --- Chapter Summarizer ---
-with tabs[0]:
+# Chapter Summarizer Tab
+def show_summary_tab():
     with st.container():
         st.markdown('<div class="content-container">', unsafe_allow_html=True)
-        st.header("Chapter Summarizer", divider="blue")
+        st.header("📖 Chapter Summarizer", divider="blue")
         st.markdown("Paste your chapter content below to generate a concise, structured summary")
         
         chapter_text = st.text_area(
@@ -297,11 +251,11 @@ with tabs[0]:
                     st.error(f"An error occurred: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Take a Test ---
-with tabs[1]:
+# Knowledge Assessment Tab
+def show_test_tab():
     with st.container():
         st.markdown('<div class="content-container">', unsafe_allow_html=True)
-        st.header("Knowledge Assessment", divider="blue")
+        st.header("📝 Knowledge Assessment", divider="blue")
         
         if not st.session_state.chapter_content:
             st.warning("Please generate a chapter summary first in the 'Chapter Summarizer' tab to create a test.")
@@ -470,11 +424,11 @@ with tabs[1]:
                         st.error(f"Error generating resources: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Doubt Solver ---
-with tabs[2]:
+# Doubt Solver Tab
+def show_doubt_tab():
     with st.container():
         st.markdown('<div class="content-container">', unsafe_allow_html=True)
-        st.header("Doubt Resolution", divider="blue")
+        st.header("💭 Doubt Resolution", divider="blue")
         st.markdown("Stuck on a concept? Get detailed explanations and examples")
         
         doubt = st.text_area(
@@ -516,9 +470,80 @@ with tabs[2]:
                     st.error(f"An error occurred: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# Premium Footer
-st.markdown("""
-    <div class="footer">
-        ©️ 2023 EduBuddy AI | Powered by Gemini AI | Terms of Service | Privacy Policy
-    </div>
-""", unsafe_allow_html=True)
+# Username Input (Fixed at bottom right)
+def show_username_input():
+    with st.container():
+        st.markdown("""
+            <div class="username-input">
+                <form onsubmit="captureUsername(event)">
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            <script>
+                function captureUsername(event) {
+                    event.preventDefault();
+                    const username = document.getElementById('username').value;
+                    window.parent.postMessage({
+                        type: 'streamlit:setComponentValue',
+                        value: username
+                    }, '*');
+                }
+            </script>
+        """, unsafe_allow_html=True)
+
+# Main App Logic
+def main():
+    # Handle tab selection
+    if 'current_tab' not in st.session_state:
+        st.session_state.current_tab = None
+    
+    # Check for username submission
+    if 'username' not in st.session_state:
+        st.session_state.username = None
+    
+    # Show appropriate content based on current tab
+    if st.session_state.current_tab is None:
+        show_cover_page()
+    elif st.session_state.current_tab == 'summary':
+        show_summary_tab()
+    elif st.session_state.current_tab == 'test':
+        show_test_tab()
+    elif st.session_state.current_tab == 'doubt':
+        show_doubt_tab()
+    
+    # Always show username input (except on cover page)
+    if st.session_state.current_tab is not None:
+        show_username_input()
+    
+    # Gradient Footer
+    st.markdown("""
+        <div class="footer">
+            <p>©️ 2023 EduBuddy AI | Powered by Gemini AI</p>
+            <div>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Handle username submission
+    if st.session_state.get('username_submitted'):
+        new_user = {
+            'username': st.session_state.username_submitted,
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        st.session_state.df_users = pd.concat([
+            st.session_state.df_users,
+            pd.DataFrame([new_user])
+        ], ignore_index=True)
+        
+        # Save to CSV (in a real app, you'd use a database)
+        st.session_state.df_users.to_csv('user_data.csv', index=False)
+        st.session_state.username_submitted = None
+        st.experimental_rerun()
+
+# Run the app
+if __name__ == "__main__":
+    main()
