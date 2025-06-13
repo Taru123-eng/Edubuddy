@@ -198,15 +198,14 @@ st.markdown("""
 # Premium Header Section
 st.markdown("""
     <div class="header-container">
-       
+        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
         <div>
-            <h3 class="main-title">EduBuddy </h3>
-            
+            <h1 class="main-title">EduBuddy AI</h1>
+            <p class="subtitle">Your intelligent learning companion that adapts to your study style, powered by Gemini AI</p>
         </div>
-       
+        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
     </div>
 """, unsafe_allow_html=True)
-
 # Feature Cards
 col1, col2, col3 = st.columns(3)
 with col1:
