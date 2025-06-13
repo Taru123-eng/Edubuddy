@@ -213,7 +213,7 @@ with col1:
         <div class="feature-card">
             <div class="feature-icon">📖</div>
             <h3 class="feature-title">Smart Summaries</h3>
-            <p class="feature-desc">Transform lengthy chapters into concise, digestible summaries with key concepts highlighted.</p>
+            <p class="feature-desc">AI-Powered Condensation - Analyzes lengthy textbook chapters or lecture notes to extract and highlight only the most critical concepts, definitions, and theories while maintaining academic accuracy.</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -222,7 +222,7 @@ with col2:
         <div class="feature-card">
             <div class="feature-icon">📝</div>
             <h3 class="feature-title">Adaptive Testing</h3>
-            <p class="feature-desc">Personalized quizzes that identify knowledge gaps and reinforce learning.</p>
+            <p class="feature-desc">Adaptive Question Creation - Automatically generates 5 multiple-choice questions with 4 options each and 3 open-ended questions tailored to the chapter's difficulty level and core learning objectives.</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -231,7 +231,7 @@ with col3:
         <div class="feature-card">
             <div class="feature-icon">💡</div>
             <h3 class="feature-title">Doubt Resolution</h3>
-            <p class="feature-desc">Instant explanations with analogies and examples for any concept you're stuck on.</p>
+            <p class="feature-desc">Concept Breakdown - Transforms complex topics into simple explanations using real-world analogies, step-by-step reasoning, and common misconception alerts for clearer understanding.</p>
         </div>
     """, unsafe_allow_html=True)
 
