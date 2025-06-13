@@ -198,12 +198,12 @@ st.markdown("""
 # Premium Header Section
 st.markdown("""
     <div class="header-container">
-        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
+       
         <div>
             <h3 class="main-title">EduBuddy </h3>
             
         </div>
-        <img src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png" class="header-logo">
+       
     </div>
 """, unsafe_allow_html=True)
 
