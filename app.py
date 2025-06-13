@@ -7,7 +7,7 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Page Configuration
 st.set_page_config(
-    page_title="EduBuddy AI",
+    page_title="EduBuddy",
     layout="wide",
     initial_sidebar_state="collapsed",
     page_icon="🧠"
