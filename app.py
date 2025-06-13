@@ -157,15 +157,7 @@ st.markdown("""
             background-color: #4f46e5 !important;
         }
         
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 80px;
-            padding: 30px 0;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            border-top: 1px solid #f1f5f9;
-        }
+        
         
         /* Feature cards */
         .feature-card {
@@ -516,9 +508,4 @@ with tabs[2]:
                     st.error(f"An error occurred: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# Premium Footer
-st.markdown("""
-    <div class="footer">
-        ©️ 2023 EduBuddy AI | Powered by Gemini AI | Terms of Service | Privacy Policy
-    </div>
-""", unsafe_allow_html=True)
+
