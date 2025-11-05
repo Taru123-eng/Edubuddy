@@ -24,6 +24,8 @@ EduBuddy was developed to bridge the educational gap for students lacking access
 
 Visit the live website here:  
 [🔗 https://edubuddy-tarushi.streamlit.app/](https://edubuddy-tarushi.streamlit.app/)
+> **Note:** For the best experience, view **EduBuddy** in **light mode**. Some features or layouts may not display correctly in dark mode.
+
 
 ## 🛠️ Tech Stack
 
