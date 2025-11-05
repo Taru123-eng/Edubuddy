@@ -4,7 +4,7 @@
 
 ##  Features
 
-- **Optimized for Light Mode**
+- **Optimized for Light Mode:**
   EduBuddy is designed to function and appear best in light mode for maximum readability and a clean learning experience.
 
 - **Lesson Summarizer**  
