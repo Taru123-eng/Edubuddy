@@ -4,6 +4,9 @@
 
 ##  Features
 
+- **Optimized for Light Mode**
+  EduBuddy is designed to function and appear best in light mode for maximum readability and a clean learning experience.
+
 - **Lesson Summarizer**  
   Upload or input lesson content, and EduBuddy’s AI instantly generates concise, easy-to-understand summaries.
 
@@ -12,9 +15,6 @@
 
 - **Simple Interface**  
   Designed for ease of use, especially for younger learners or those with limited tech experience.
-
--**Optimized for Light Mode**
-   EduBuddy is designed to function and appear best in light mode for maximum readability and a clean learning experience.
 
 ##  Project Objective
 
