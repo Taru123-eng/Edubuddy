@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 
-# Configure Gemini API
+
 genai.configure(api_key="MY_API_KEY")  
 model = genai.GenerativeModel("gemini-2.5-flash")
 
@@ -13,16 +13,16 @@ st.set_page_config(
     page_icon="🧠"
 )
 
-# Custom CSS for premium styling
+
 st.markdown("""
     <style>
-        /* Main styles */
+        
         .main {
             background-color: #ffffff;
             color: #1e293b;
         }
         
-        /* Premium header */
+       
         .header-container {
             display: flex;
             justify-content: center;
@@ -288,7 +288,7 @@ with tabs[0]:
                     st.error(f"An error occurred: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Take a Test ---
+
 with tabs[1]:
     with st.container():
         st.markdown('<div class="content-container">', unsafe_allow_html=True)
@@ -434,7 +434,7 @@ with tabs[1]:
 
                     st.session_state.subjective_feedback = subjective_feedback
 
-                # Performance Summary
+                
                 st.markdown("### Performance Summary")
                 
                 if correct == len(st.session_state.mcqs) and all(subjective_responses):
@@ -444,7 +444,7 @@ with tabs[1]:
                 else:
                     st.warning("📖 Keep practicing! Review the material and try again for better results.")
                 
-                # Generate dynamic resources
+                
                 with st.spinner("Compiling personalized learning resources..."):
                     try:
                         resource_prompt = (
@@ -461,7 +461,7 @@ with tabs[1]:
                         st.error(f"Error generating resources: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- Doubt Solver ---
+
 with tabs[2]:
     with st.container():
         st.markdown('<div class="content-container">', unsafe_allow_html=True)
